@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SNAP Research — AI Research Assistant</title>
+  <meta name="description" content="SNAP Research is a premium AI-powered research assistant that helps you explore topics deeply, synthesize knowledge, and organize your findings with beautiful research cards." />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔬</text></svg>" />
+</head>
+<body>
+
+  <!-- Particle Background -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- App Shell -->
+  <div class="app-wrapper">
+
+    <!-- ── Header ── -->
+    <header class="app-header">
+      <div class="logo">
+        <div class="logo-icon">🔬</div>
+        <span>SNAP Research</span>
+      </div>
+
+      <div class="header-actions">
+        <div class="api-status-pill" id="api-status-pill">
+          <span class="api-dot" id="api-dot"></span>
+          <span id="api-label">Checking...</span>
+        </div>
+        <button class="btn-icon" id="highlights-toggle-btn" title="Toggle Highlights" aria-label="Toggle highlights panel">⭐</button>
+        <button id="export-btn" title="Export session as Markdown" aria-label="Export research as Markdown">
+          ⬇ Export MD
+        </button>
+        <button class="btn-icon" id="clear-session-btn" title="Clear current session" aria-label="Clear session">🗑</button>
+      </div>
+    </header>
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar" role="navigation" aria-label="Research sidebar">
+
+      <!-- New Research -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Sessions</div>
+        <button class="new-research-btn" id="new-session-btn" aria-label="Start a new research session">
+          ＋ New Research Session
+        </button>
+        <div id="sessions-list" role="list"></div>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- Research Mode -->
+      <div class="sidebar-label" style="padding-left:24px;">Research Mode</div>
+      <div class="mode-grid" role="group" aria-label="Research modes">
+        <button class="mode-btn active" data-mode="explain" id="mode-explain" aria-pressed="true">
+          <span class="mode-icon">📖</span>Explain
+        </button>
+        <button class="mode-btn" data-mode="deep" id="mode-deep" aria-pressed="false">
+          <span class="mode-icon">🔬</span>Deep Dive
+        </button>
+        <button class="mode-btn" data-mode="compare" id="mode-compare" aria-pressed="false">
+          <span class="mode-icon">🆚</span>Compare
+        </button>
+        <button class="mode-btn" data-mode="synth" id="mode-synth" aria-pressed="false">
+          <span class="mode-icon">🧩</span>Synthesize
+        </button>
+      </div>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- Model Info -->
+      <div class="sidebar-section">
+        <div class="sidebar-label">Model</div>
+        <div class="model-info-card">
+          <div class="model-name">✨ gemini-3.5-flash</div>
+          <div class="model-sub">Google Gemini · Powered by SNAP</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── Main Area ── -->
+    <main class="main-content" id="main-content">
+
+      <!-- Welcome State -->
+      <div class="welcome-state" id="welcome-state">
+        <div class="welcome-orb">🧠</div>
+        <h1 class="welcome-title">What are you researching today?</h1>
+        <p class="welcome-subtitle">
+          Ask anything — from cutting-edge science to historical events. SNAP Research will provide structured, multi-angle insights with follow-up directions.
+        </p>
+        <div class="starter-chips" id="starter-chips" role="list">
+          <button class="starter-chip" role="listitem">How does quantum entanglement work?</button>
+          <button class="starter-chip" role="listitem">Compare supervised vs unsupervised learning</button>
+          <button class="starter-chip" role="listitem">Explain the theory of relativity simply</button>
+          <button class="starter-chip" role="listitem">What causes black holes to evaporate?</button>
+          <button class="starter-chip" role="listitem">History of the Internet</button>
+          <button class="starter-chip" role="listitem">How does CRISPR gene editing work?</button>
+        </div>
+      </div>
+
+      <!-- Highlights Panel -->
+      <div class="highlights-panel" id="highlights-panel">
+        <div class="highlights-header">
+          ⭐ Pinned Highlights
+          <button class="card-action-btn" id="clear-highlights-btn" style="font-size:0.72rem;">Clear all</button>
+        </div>
+        <div class="highlights-list" id="highlights-list"></div>
+      </div>
+
+      <!-- Research Canvas -->
+      <div class="research-canvas" id="research-canvas" style="display:none;" aria-live="polite" aria-label="Research results"></div>
+
+      <!-- Input Bar -->
+      <div class="input-bar">
+        <div class="input-wrapper">
+          <textarea
+            id="research-input"
+            placeholder="Ask anything to research..."
+            rows="1"
+            aria-label="Research query input"
+            aria-multiline="true"
+          ></textarea>
+          <button class="send-btn" id="send-btn" aria-label="Send research query">
+            ▲
+          </button>
+        </div>
+        <p class="input-hint">Press <kbd style="padding:1px 6px;border:1px solid var(--border);border-radius:4px;font-size:0.7rem;">Enter</kbd> to send · <kbd style="padding:1px 6px;border:1px solid var(--border);border-radius:4px;font-size:0.7rem;">Shift+Enter</kbd> for new line</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
